@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Il Buon Pasto — Prenotazioni Pranzo</title>
+<title>Centrale Edison Candela — Prenotazioni Pranzo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -13,15 +13,35 @@
   --border:rgba(92,107,74,0.18);--card:#FDFBF7;--r:13px;
 }
 body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);min-height:100vh}
-.topbar{background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:14px 24px;gap:12px;flex-wrap:wrap}
-.brand{font-family:'Playfair Display',serif;color:var(--gold);font-size:20px;letter-spacing:.02em;line-height:1}
-.brand small{font-family:'Outfit',sans-serif;color:rgba(255,255,255,.4);font-size:11px;font-weight:300;letter-spacing:.1em;display:block;margin-top:3px}
+
+/* TOPBAR */
+.topbar{background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:12px 24px;gap:12px;flex-wrap:wrap}
+.topbar-left{display:flex;flex-direction:column;gap:2px}
+.brand-main{font-family:'Playfair Display',serif;color:#fff;font-size:18px;letter-spacing:.04em;line-height:1}
+.brand-sub{font-family:'Outfit',sans-serif;color:var(--gold);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ristorante-info{text-align:right}
+.rist-nome{font-family:'Playfair Display',serif;color:var(--gold);font-size:13px;font-style:italic}
+.rist-contatti{font-size:10px;color:rgba(255,255,255,.45);line-height:1.6}
+.rist-contatti a{color:rgba(255,255,255,.45);text-decoration:none}
+.rist-contatti a:hover{color:var(--gold)}
 .tabs{display:flex;background:rgba(255,255,255,.07);border-radius:30px;padding:3px;gap:3px}
 .tab{padding:6px 16px;border-radius:30px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;border:none;background:none;font-family:'Outfit',sans-serif;transition:all .2s}
 .tab.on{background:var(--terracotta);color:#fff}
 .datepill{font-size:11px;color:var(--gold);background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:5px 12px;white-space:nowrap}
+
+/* LAYOUT */
 .wrap{max-width:900px;margin:0 auto;padding:28px 18px}
 .sec{display:none}.sec.on{display:block}
+
+/* ORA LIMITE BANNER */
+.ora-limite-banner{background:var(--terracotta);color:#fff;border-radius:var(--r);padding:28px;text-align:center;margin-bottom:20px}
+.ora-limite-banner h2{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
+.ora-limite-banner p{font-size:14px;opacity:.9;line-height:1.6;margin-bottom:8px}
+.ora-limite-banner .tel{font-size:18px;font-weight:600;margin-top:12px;display:block}
+.ora-limite-banner .mail{font-size:13px;opacity:.8;margin-top:4px;display:block}
+
+/* ORDINE */
 .hero-title{font-family:'Playfair Display',serif;font-size:30px;line-height:1.2;margin-bottom:5px}
 .hero-title em{color:var(--terracotta);font-style:italic}
 .hero-sub{color:var(--sage-light);font-size:13px;margin-bottom:26px}
@@ -53,6 +73,8 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .success h2{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:8px}
 .success p{font-size:13px;opacity:.85}
 .btn-again{margin-top:14px;padding:9px 22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500}
+
+/* ADMIN */
 .admin-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:12px}
 .admin-h{font-family:'Playfair Display',serif;font-size:26px}
 .admin-h small{font-size:13px;font-weight:400;font-family:'Outfit',sans-serif;color:var(--sage-light);display:block;margin-top:2px}
@@ -62,6 +84,8 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .btn-o:hover{border-color:var(--sage);background:var(--sage-pale)}
 .btn-p{background:var(--terracotta);color:#fff}
 .btn-p:hover{background:#A04F30}
+.btn-mail{background:var(--sage);color:#fff}
+.btn-mail:hover{background:#4A5A38}
 .btn-sm{padding:5px 10px;font-size:11px;background:transparent;border:1.5px solid rgba(184,92,56,.25);color:var(--terracotta);border-radius:6px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600}
 .btn-sm:hover{background:var(--terracotta-pale)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
@@ -91,6 +115,10 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .ai-row{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--sage-pale);border-radius:9px;font-size:13px;color:var(--sage);margin-bottom:14px}
 .exp-pre{display:none;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-top:16px;white-space:pre-wrap;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:var(--ink)}
 .exp-pre.on{display:block}
+.sync-bar{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sage-light);margin-bottom:16px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--sage-light)}
+.sync-dot.live{background:#4CAF50;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(24,24,15,.6);z-index:100;align-items:center;justify-content:center}
 .modal-bg.on{display:flex}
 .modal{background:var(--paper);border-radius:16px;padding:32px 28px;width:340px;max-width:90vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
@@ -101,14 +129,11 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .modal-err{font-size:12px;color:var(--terracotta);margin-bottom:12px;min-height:16px}
 .btn-modal{width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
 .btn-modal:hover{background:var(--sage)}
-.sync-bar{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sage-light);margin-bottom:16px}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--sage-light)}
-.sync-dot.live{background:#4CAF50;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @media(max-width:600px){
   .orario-grid{grid-template-columns:repeat(2,1fr)}
   .stats{grid-template-columns:1fr}
   .ocard{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto}
+  .rist-contatti{display:none}
 }
 </style>
 </head>
@@ -126,83 +151,107 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 </div>
 
 <div class="topbar">
-  <div class="brand">Il Buon Pasto <small>PRENOTAZIONI PRANZO</small></div>
-  <div class="tabs">
-    <button class="tab on" onclick="goTab('ordine',this)">🍽 Ordina</button>
-    <button class="tab" onclick="askAdmin(this)">⚙ Admin</button>
+  <div class="topbar-left">
+    <div class="brand-main">Centrale Edison Candela</div>
+    <div class="brand-sub">Prenotazioni Pranzo</div>
   </div>
-  <div class="datepill" id="datepill"></div>
+  <div class="topbar-right">
+    <div class="ristorante-info">
+      <div class="rist-nome">La Rosa dei Venti</div>
+      <div class="rist-contatti">
+        📞 <a href="tel:0885656244">0885-656244</a><br>
+        ✉️ <a href="mailto:ristorante.albergo.larosadeiventi@hotmail.it">ristorante.albergo.larosadeiventi@hotmail.it</a>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="goTab('ordine',this)">🍽 Ordina</button>
+      <button class="tab" onclick="askAdmin(this)">⚙ Admin</button>
+    </div>
+    <div class="datepill" id="datepill"></div>
+  </div>
 </div>
 
 <div class="wrap">
 
   <!-- ORDINE -->
   <div class="sec on" id="sec-ordine">
-    <div class="success" id="succ">
-      <h2>Ordine inviato! 🎉</h2>
-      <p id="succ-txt"></p>
-      <button class="btn-again" onclick="resetForm()">Nuovo ordine</button>
+
+    <!-- Banner ora limite -->
+    <div class="ora-limite-banner" id="ora-limite-banner" style="display:none">
+      <h2>⏰ Ordinazioni chiuse</h2>
+      <p>L'orario limite per le ordinazioni online è le <strong>11:00</strong>.<br>
+      Per ordinare contatta direttamente il ristorante:</p>
+      <span class="tel">📞 0885-656244</span>
+      <span class="mail">✉️ ristorante.albergo.larosadeiventi@hotmail.it</span>
     </div>
-    <div id="the-form">
-      <p class="hero-title">Buongiorno, <em>cosa ordini oggi?</em></p>
-      <p class="hero-sub">Compila il modulo — il tuo ordine arriverà direttamente all'admin.</p>
-      <div class="menu-box">
-        <div class="menu-box-header">
-          <span>Menù del giorno</span>
-          <span id="menu-updated" style="font-size:11px;opacity:.6"></span>
-        </div>
-        <div id="menu-display">
-          <div class="menu-no-img">
-            <strong>Menù non ancora disponibile</strong>
-            L'admin non ha ancora caricato il menù di oggi.<br>
-            Puoi comunque scrivere la tua scelta nei campi qui sotto.
+
+    <div id="ordine-content">
+      <div class="success" id="succ">
+        <h2>Ordine inviato! 🎉</h2>
+        <p id="succ-txt"></p>
+        <button class="btn-again" onclick="resetForm()">Nuovo ordine</button>
+      </div>
+      <div id="the-form">
+        <p class="hero-title">Buongiorno, <em>cosa ordini oggi?</em></p>
+        <p class="hero-sub">Compila il modulo entro le ore 11:00 — il tuo ordine arriverà direttamente all'admin.</p>
+        <div class="menu-box">
+          <div class="menu-box-header">
+            <span>Menù del giorno</span>
+            <span id="menu-updated" style="font-size:11px;opacity:.6"></span>
+          </div>
+          <div id="menu-display">
+            <div class="menu-no-img">
+              <strong>Menù non ancora disponibile</strong>
+              L'admin non ha ancora caricato il menù di oggi.<br>
+              Puoi comunque scrivere la tua scelta nei campi qui sotto.
+            </div>
           </div>
         </div>
+        <div class="fcard">
+          <div class="fcard-title">I tuoi dati</div>
+          <div class="field">
+            <label>Nome e Cognome *</label>
+            <input type="text" id="f-nome" placeholder="es. Marco Rossi"/>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-title">La tua scelta</div>
+          <div class="field">
+            <label>Primo piatto *</label>
+            <input type="text" id="f-primo" placeholder="Scrivi il primo piatto che vuoi ordinare..."/>
+            <div class="hint">Consulta il menù qui sopra e scrivi il piatto che preferisci</div>
+          </div>
+          <div class="field">
+            <label>Secondo piatto *</label>
+            <input type="text" id="f-secondo" placeholder="Scrivi il secondo piatto..."/>
+          </div>
+          <div class="field">
+            <label>Contorno / aggiunta (opzionale)</label>
+            <input type="text" id="f-contorno" placeholder="es. insalata mista, patate al forno..."/>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-title">Orario di arrivo</div>
+          <div class="orario-grid">
+            <button class="obtn" onclick="selOra(this,'12:00')">12:00</button>
+            <button class="obtn" onclick="selOra(this,'12:15')">12:15</button>
+            <button class="obtn" onclick="selOra(this,'12:30')">12:30</button>
+            <button class="obtn" onclick="selOra(this,'12:45')">12:45</button>
+            <button class="obtn" onclick="selOra(this,'13:00')">13:00</button>
+            <button class="obtn" onclick="selOra(this,'13:15')">13:15</button>
+            <button class="obtn" onclick="selOra(this,'13:30')">13:30</button>
+            <button class="obtn" onclick="selOra(this,'13:45')">13:45</button>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard-title">Note / Allergie</div>
+          <div class="field">
+            <label>Note (opzionale)</label>
+            <textarea id="f-note" placeholder="es. senza glutine, senza cipolla, porzione piccola..."></textarea>
+          </div>
+        </div>
+        <button class="btn-main" id="submit-btn" onclick="submitOrdine()">Invia il mio ordine</button>
       </div>
-      <div class="fcard">
-        <div class="fcard-title">I tuoi dati</div>
-        <div class="field">
-          <label>Nome e Cognome *</label>
-          <input type="text" id="f-nome" placeholder="es. Marco Rossi"/>
-        </div>
-      </div>
-      <div class="fcard">
-        <div class="fcard-title">La tua scelta</div>
-        <div class="field">
-          <label>Primo piatto *</label>
-          <input type="text" id="f-primo" placeholder="Scrivi il primo piatto che vuoi ordinare..."/>
-          <div class="hint">Consulta il menù qui sopra e scrivi il piatto che preferisci</div>
-        </div>
-        <div class="field">
-          <label>Secondo piatto *</label>
-          <input type="text" id="f-secondo" placeholder="Scrivi il secondo piatto..."/>
-        </div>
-        <div class="field">
-          <label>Contorno / aggiunta (opzionale)</label>
-          <input type="text" id="f-contorno" placeholder="es. insalata mista, patate al forno..."/>
-        </div>
-      </div>
-      <div class="fcard">
-        <div class="fcard-title">Orario di arrivo</div>
-        <div class="orario-grid">
-          <button class="obtn" onclick="selOra(this,'12:00')">12:00</button>
-          <button class="obtn" onclick="selOra(this,'12:15')">12:15</button>
-          <button class="obtn" onclick="selOra(this,'12:30')">12:30</button>
-          <button class="obtn" onclick="selOra(this,'12:45')">12:45</button>
-          <button class="obtn" onclick="selOra(this,'13:00')">13:00</button>
-          <button class="obtn" onclick="selOra(this,'13:15')">13:15</button>
-          <button class="obtn" onclick="selOra(this,'13:30')">13:30</button>
-          <button class="obtn" onclick="selOra(this,'13:45')">13:45</button>
-        </div>
-      </div>
-      <div class="fcard">
-        <div class="fcard-title">Note / Allergie</div>
-        <div class="field">
-          <label>Note (opzionale)</label>
-          <textarea id="f-note" placeholder="es. senza glutine, senza cipolla, porzione piccola..."></textarea>
-        </div>
-      </div>
-      <button class="btn-main" id="submit-btn" onclick="submitOrdine()">Invia il mio ordine</button>
     </div>
   </div>
 
@@ -213,14 +262,15 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
         <div class="admin-h">Pannello Admin <small>Gestione ordini e menù giornaliero</small></div>
       </div>
       <div class="btns">
-        <button class="btn btn-o" onclick="copyRiepilogo()">📋 Copia riepilogo</button>
-        <button class="btn btn-p" onclick="stampa()">🖨 Stampa / PDF</button>
+        <button class="btn btn-o" onclick="copyRiepilogo()">📋 Copia</button>
+        <button class="btn btn-p" onclick="stampa()">🖨 Stampa</button>
+        <button class="btn btn-mail" onclick="inviaEmail()">✉️ Invia email</button>
       </div>
     </div>
 
     <div class="sync-bar">
-      <div class="sync-dot live" id="sync-dot"></div>
-      <span id="sync-label">Connesso — aggiornamento in tempo reale</span>
+      <div class="sync-dot live"></div>
+      <span>Connesso — aggiornamento in tempo reale</span>
     </div>
 
     <div class="stats">
@@ -254,14 +304,13 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 
 </div>
 
-<!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, set, remove, onValue, get }
+import { getDatabase, ref, push, set, remove, onValue }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // ============================================================
-// CONFIGURAZIONE FIREBASE
+// CONFIGURAZIONE
 // ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyBSNAaJk7zekk8Wd2aSGkSoU7bsJeTmo0g",
@@ -272,15 +321,14 @@ const firebaseConfig = {
   appId: "1:748141742267:web:823e4578ac14bcd48d419e",
   databaseURL: "https://pranzo-app-6b5a1-default-rtdb.europe-west1.firebasedatabase.app"
 };
-// ============================================================
-// PASSWORD ADMIN — cambia questo valore!
-const ADMIN_PASSWORD = 'pranzo2024';
+const ADMIN_PASSWORD = 'pranzo2024';   // <-- cambia se vuoi
+const ORA_LIMITE    = 11;              // ordini chiusi dopo le 11:00
+const EMAIL_RISTORANTE = 'ristorante.albergo.larosadeiventi@hotmail.it';
 // ============================================================
 
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
-
-const TODAY = new Date().toISOString().slice(0,10); // es. "2025-03-18"
+const TODAY = new Date().toISOString().slice(0,10);
 const ordiniRef = ref(db, `ordini/${TODAY}`);
 const menuRef   = ref(db, `menu/current`);
 
@@ -290,8 +338,16 @@ let ordiniSnapshot = {};
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
   document.getElementById('datepill').textContent =
-    new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+    now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+
+  // Controlla ora limite
+  if (now.getHours() >= ORA_LIMITE) {
+    document.getElementById('ora-limite-banner').style.display = 'block';
+    document.getElementById('the-form').style.display = 'none';
+    document.getElementById('succ').style.display = 'none';
+  }
 
   // Ascolta menù in tempo reale
   onValue(menuRef, snap => {
@@ -307,7 +363,28 @@ document.addEventListener('DOMContentLoaded', () => {
     renderOrdini(lista);
     updateStats(lista);
   });
+
+  // Pulizia automatica: rimuove ordini di ieri e precedenti
+  cleanOldData();
 });
+
+// ---- PULIZIA DATI VECCHI ----
+async function cleanOldData() {
+  // Gli ordini sono già organizzati per data (ordini/YYYY-MM-DD)
+  // Firebase mantiene solo i dati scritti — i vecchi rimangono finché non li cancelliamo
+  // Questo blocco rimuove i nodi ordini con data diversa da oggi
+  const { get } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+  try {
+    const allOrdiniRef = ref(db, 'ordini');
+    const snap = await get(allOrdiniRef);
+    if (!snap.exists()) return;
+    snap.forEach(child => {
+      if (child.key !== TODAY) {
+        remove(ref(db, `ordini/${child.key}`));
+      }
+    });
+  } catch(e) {}
+}
 
 // ---- NAV ----
 window.goTab = function(id, btn) {
@@ -336,9 +413,9 @@ window.checkPwd = function() {
   }
 };
 
-// ---- MENU DISPLAY (colleghi) ----
+// ---- MENU DISPLAY ----
 function renderMenuDisplay(m) {
-  const el = document.getElementById('menu-display');
+  const el  = document.getElementById('menu-display');
   const upd = document.getElementById('menu-updated');
   if (m && m.dataUrl) {
     el.innerHTML=`<div class="menu-img-wrap"><img src="${m.dataUrl}" alt="menù del giorno"/></div>`;
@@ -350,24 +427,19 @@ function renderMenuDisplay(m) {
     upd.textContent='';
   }
 }
-
-// ---- MENU PREVIEW ADMIN ----
 function renderMenuPreviewAdmin(m) {
   const prev = document.getElementById('menu-prev');
   if (m && m.dataUrl) {
     document.getElementById('menu-img-el').src = m.dataUrl;
     prev.style.display='block';
-  } else {
-    prev.style.display='none';
-  }
+  } else { prev.style.display='none'; }
 }
 
 // ---- UPLOAD MENU ----
 window.uploadMenu = function(input) {
   const file = input.files[0]; if (!file) return;
   if (!file.type.startsWith('image/')) {
-    alert('Carica un\'immagine JPG o PNG.\nSe hai il PDF, fai uno screenshot e carica quello.');
-    input.value=''; return;
+    alert('Carica un\'immagine JPG o PNG.'); input.value=''; return;
   }
   document.getElementById('ai-row').style.display='flex';
   const reader = new FileReader();
@@ -379,19 +451,22 @@ window.uploadMenu = function(input) {
   reader.readAsDataURL(file);
   input.value='';
 };
-window.clearMenu = async function() {
-  await remove(menuRef);
-};
+window.clearMenu = async function() { await remove(menuRef); };
 
 // ---- ORARIO ----
 window.selOra = function(btn, val) {
   document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  oraSelezionata = val;
+  btn.classList.add('on'); oraSelezionata = val;
 };
 
-// ---- SUBMIT ORDINE ----
+// ---- SUBMIT ----
 window.submitOrdine = async function() {
+  // Ricontrolla ora limite al momento dell'invio
+  if (new Date().getHours() >= ORA_LIMITE) {
+    document.getElementById('ora-limite-banner').style.display='block';
+    document.getElementById('the-form').style.display='none';
+    return;
+  }
   const nome     = document.getElementById('f-nome').value.trim();
   const primo    = document.getElementById('f-primo').value.trim();
   const secondo  = document.getElementById('f-secondo').value.trim();
@@ -403,9 +478,7 @@ window.submitOrdine = async function() {
   if (!oraSelezionata) { alert("Seleziona l'orario di arrivo."); return; }
 
   const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Invio in corso...';
-
+  btn.disabled=true; btn.textContent='Invio in corso...';
   try {
     await push(ordiniRef, {
       nome, primo, secondo, contorno, note,
@@ -418,59 +491,51 @@ window.submitOrdine = async function() {
     document.getElementById('the-form').style.display='none';
   } catch(e) {
     alert('Errore nell\'invio. Controlla la connessione e riprova.');
-    btn.disabled = false;
-    btn.textContent = 'Invia il mio ordine';
+    btn.disabled=false; btn.textContent='Invia il mio ordine';
   }
 };
-
 window.resetForm = function() {
   ['f-nome','f-primo','f-secondo','f-contorno','f-note'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('on'));
-  oraSelezionata = null;
+  oraSelezionata=null;
   document.getElementById('succ').classList.remove('on');
-  document.getElementById('the-form').style.display='block';
-  const btn = document.getElementById('submit-btn');
+  // Ricontrolla ora limite
+  if (new Date().getHours() >= ORA_LIMITE) {
+    document.getElementById('ora-limite-banner').style.display='block';
+  } else {
+    document.getElementById('the-form').style.display='block';
+  }
+  const btn=document.getElementById('submit-btn');
   btn.disabled=false; btn.textContent='Invia il mio ordine';
 };
 
 // ---- RENDER ORDINI ----
 function renderOrdini(lista) {
   const c = document.getElementById('ordini-list');
-  if (!lista || !lista.length) {
-    c.innerHTML='<div class="empty">Nessun ordine ricevuto oggi.</div>'; return;
-  }
-  const sorted = [...lista].sort((a,b)=>a.orario.localeCompare(b.orario));
-  c.innerHTML = sorted.map(o=>`
+  if (!lista||!lista.length) { c.innerHTML='<div class="empty">Nessun ordine ricevuto oggi.</div>'; return; }
+  const sorted=[...lista].sort((a,b)=>a.orario.localeCompare(b.orario));
+  c.innerHTML=sorted.map(o=>`
     <div class="ocard">
       <div class="oname">${esc(o.nome)}</div>
       <div class="opiate"><small>Primo</small>${esc(o.primo)}</div>
-      <div class="opiate">
-        <small>Secondo</small>${esc(o.secondo)}
+      <div class="opiate"><small>Secondo</small>${esc(o.secondo)}
         ${o.contorno?`<br/><small>Contorno</small>${esc(o.contorno)}`:''}
         ${o.note?`<span class="note-tag">📝 ${esc(o.note)}</span>`:''}
       </div>
       <div class="oorario">🕐 ${o.orario}</div>
-      <button class="btn-sm" onclick="delOrdine('${getKeyByOrdine(o)}')">✕</button>
+      <button class="btn-sm" onclick="delOrdine('${getKey(o)}')">✕</button>
     </div>`).join('');
 }
-
-function getKeyByOrdine(o) {
-  return Object.entries(ordiniSnapshot).find(([k,v])=>
-    v.nome===o.nome && v.ts===o.ts
-  )?.[0] || '';
+function getKey(o) {
+  return Object.entries(ordiniSnapshot).find(([k,v])=>v.nome===o.nome&&v.ts===o.ts)?.[0]||'';
 }
-
 window.delOrdine = async function(key) {
   if (!key) return;
-  await remove(ref(db, `ordini/${TODAY}/${key}`));
+  await remove(ref(db,`ordini/${TODAY}/${key}`));
 };
-
 function updateStats(lista) {
-  document.getElementById('s-tot').textContent = lista.length;
-  if (!lista.length) {
-    document.getElementById('s-pop').textContent='—';
-    document.getElementById('s-ora').textContent='—'; return;
-  }
+  document.getElementById('s-tot').textContent=lista.length;
+  if (!lista.length) { document.getElementById('s-pop').textContent='—'; document.getElementById('s-ora').textContent='—'; return; }
   const pc={},oc={};
   lista.forEach(o=>{pc[o.primo]=(pc[o.primo]||0)+1;oc[o.orario]=(oc[o.orario]||0)+1;});
   const top=Object.entries(pc).sort((a,b)=>b[1]-a[1])[0][0];
@@ -478,20 +543,25 @@ function updateStats(lista) {
   document.getElementById('s-ora').textContent=Object.entries(oc).sort((a,b)=>b[1]-a[1])[0][0];
 }
 
-// ---- EXPORT ----
+// ---- RIEPILOGO ----
 function buildTesto() {
   const lista = Object.values(ordiniSnapshot);
-  const oggi=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  let t=`PRENOTAZIONI PRANZO — ${oggi.toUpperCase()}\n${'='.repeat(54)}\n\n`;
-  if (!lista.length){t+='Nessun ordine ricevuto.\n';return t;}
+  const oggi  = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const sep   = '─'.repeat(60);
+  let t = `CENTRALE EDISON CANDELA\n`;
+  t    += `Prenotazioni Pranzo — ${oggi}\n`;
+  t    += `Ristorante: La Rosa dei Venti — Tel. 0885-656244\n`;
+  t    += `${sep}\n\n`;
+  if (!lista.length) { t+='Nessun ordine ricevuto.\n'; return t; }
   [...lista].sort((a,b)=>a.orario.localeCompare(b.orario)).forEach((o,i)=>{
-    t+=`${i+1}. ${o.nome}\n   Primo:    ${o.primo}\n   Secondo:  ${o.secondo}\n`;
-    if(o.contorno)t+=`   Contorno: ${o.contorno}\n`;
-    t+=`   Arrivo:   ore ${o.orario}\n`;
-    if(o.note)t+=`   Note:     ${o.note}\n`;
-    t+='\n';
+    let riga = `${i+1}. ${o.nome} – ${o.primo} – ${o.secondo}`;
+    if (o.contorno) riga += ` – ${o.contorno}`;
+    riga += ` – ore ${o.orario}`;
+    if (o.note)    riga += ` (${o.note})`;
+    t += riga + '\n';
   });
-  t+='='.repeat(54)+`\nTotale coperti: ${lista.length}\n`;
+  t += `\n${sep}\n`;
+  t += `Totale coperti: ${lista.length}\n`;
   return t;
 }
 
@@ -499,17 +569,40 @@ window.copyRiepilogo = function() {
   const t=buildTesto();
   navigator.clipboard.writeText(t)
     .then(()=>alert('✓ Riepilogo copiato negli appunti!'))
-    .catch(()=>{document.getElementById('exp-pre').textContent=t;document.getElementById('exp-pre').classList.add('on');});
+    .catch(()=>{ document.getElementById('exp-pre').textContent=t; document.getElementById('exp-pre').classList.add('on'); });
 };
+
 window.stampa = function() {
   const t=buildTesto();
+  const data=new Date().toLocaleDateString('it-IT');
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>Pranzo ${new Date().toLocaleDateString('it-IT')}</title>
-  <style>body{font-family:Georgia,serif;padding:48px;font-size:13px;line-height:2;color:#111;max-width:700px;margin:0 auto}
-  pre{white-space:pre-wrap;font-family:'Courier New',monospace}</style></head>
-  <body><h2>Il Buon Pasto — Prenotazioni Pranzo</h2><hr style="margin-bottom:20px"/>
-  <pre>${t}</pre><script>window.print();setTimeout(()=>window.close(),1500);<\/script></body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><title>Pranzo ${data}</title>
+  <style>
+    body{font-family:Georgia,serif;padding:48px;font-size:13px;line-height:1.9;color:#111;max-width:720px;margin:0 auto}
+    .intestazione{border-bottom:2px solid #5C6B4A;padding-bottom:14px;margin-bottom:20px}
+    .intestazione h1{font-size:20px;color:#18180F;margin-bottom:4px}
+    .intestazione h2{font-size:14px;font-weight:normal;color:#5C6B4A;margin-bottom:2px}
+    .intestazione p{font-size:12px;color:#888}
+    pre{white-space:pre-wrap;font-family:'Courier New',monospace;font-size:13px;line-height:1.9}
+  </style></head>
+  <body>
+    <div class="intestazione">
+      <h1>Centrale Edison Candela</h1>
+      <h2>Prenotazioni Pranzo — ${data}</h2>
+      <p>Ristorante: La Rosa dei Venti &nbsp;|&nbsp; Tel. 0885-656244</p>
+    </div>
+    <pre>${t.split('\n').slice(4).join('\n')}</pre>
+    <script>window.print();setTimeout(()=>window.close(),1500);<\/script>
+  </body></html>`);
   w.document.close();
+};
+
+window.inviaEmail = function() {
+  const t   = buildTesto();
+  const oggi = new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const sogg = encodeURIComponent(`Prenotazioni Pranzo ${oggi} — Centrale Edison Candela`);
+  const body = encodeURIComponent(t);
+  window.location.href = `mailto:${EMAIL_RISTORANTE}?subject=${sogg}&body=${body}`;
 };
 
 function esc(s){if(!s)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
