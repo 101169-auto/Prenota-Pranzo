@@ -47,6 +47,7 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .obtn.on{border-color:var(--terracotta);background:var(--terracotta-pale);color:var(--terracotta)}
 .btn-main{width:100%;padding:15px;background:var(--ink);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .2s;margin-top:4px}
 .btn-main:hover{background:var(--sage);transform:translateY(-1px)}
+.btn-main:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .success{display:none;background:var(--sage);color:#fff;border-radius:var(--r);padding:28px;text-align:center;margin-bottom:20px}
 .success.on{display:block}
 .success h2{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:8px}
@@ -79,13 +80,13 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .mpa-img img{width:100%;max-height:340px;object-fit:contain}
 .ordini-h{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:14px}
 .empty{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:36px;text-align:center;color:var(--sage-light);font-size:13px}
-.ocard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-bottom:9px;display:grid;grid-template-columns:140px 1fr 1fr 72px 32px;gap:10px;align-items:start}
+.ocard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin-bottom:9px;display:grid;grid-template-columns:150px 1fr 1fr 72px 36px;gap:10px;align-items:start}
 .oname{font-weight:600;font-size:14px;padding-top:2px}
 .opiate{font-size:13px}
 .opiate small{display:block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sage-light);margin-bottom:2px}
 .oorario{font-size:13px;font-weight:700;color:var(--sage);text-align:center;padding-top:2px}
 .note-tag{display:inline-block;margin-top:4px;font-size:10px;background:var(--gold-pale);color:#8A6820;border-radius:5px;padding:2px 7px}
-.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--sage);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--sage);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ai-row{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--sage-pale);border-radius:9px;font-size:13px;color:var(--sage);margin-bottom:14px}
 .exp-pre{display:none;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-top:16px;white-space:pre-wrap;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:var(--ink)}
@@ -100,6 +101,10 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .modal-err{font-size:12px;color:var(--terracotta);margin-bottom:12px;min-height:16px}
 .btn-modal{width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
 .btn-modal:hover{background:var(--sage)}
+.sync-bar{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sage-light);margin-bottom:16px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--sage-light)}
+.sync-dot.live{background:#4CAF50;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @media(max-width:600px){
   .orario-grid{grid-template-columns:repeat(2,1fr)}
   .stats{grid-template-columns:1fr}
@@ -197,7 +202,7 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
           <textarea id="f-note" placeholder="es. senza glutine, senza cipolla, porzione piccola..."></textarea>
         </div>
       </div>
-      <button class="btn-main" onclick="submitOrdine()">Invia il mio ordine</button>
+      <button class="btn-main" id="submit-btn" onclick="submitOrdine()">Invia il mio ordine</button>
     </div>
   </div>
 
@@ -212,20 +217,28 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
         <button class="btn btn-p" onclick="stampa()">🖨 Stampa / PDF</button>
       </div>
     </div>
+
+    <div class="sync-bar">
+      <div class="sync-dot live" id="sync-dot"></div>
+      <span id="sync-label">Connesso — aggiornamento in tempo reale</span>
+    </div>
+
     <div class="stats">
       <div class="scard"><div class="snum" id="s-tot">0</div><div class="slabel">Ordini oggi</div></div>
       <div class="scard"><div class="snum" id="s-pop" style="font-size:16px;padding-top:6px">—</div><div class="slabel">Più ordinato</div></div>
       <div class="scard"><div class="snum" id="s-ora">—</div><div class="slabel">Orario più richiesto</div></div>
     </div>
+
     <div class="upload-zone" onclick="document.getElementById('fileIn').click()">
-      <div style="font-size:28px;margin-bottom:8px">📄</div>
+      <div style="font-size:28px;margin-bottom:8px">📸</div>
       <h4>Carica il menù (JPG o PNG)</h4>
-      <p>Carica una foto o screenshot del menù (JPG, PNG) — i colleghi lo vedranno subito</p>
+      <p>I colleghi lo vedranno istantaneamente nell'app</p>
       <input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" onchange="uploadMenu(this)"/>
     </div>
     <div class="ai-row" id="ai-row" style="display:none">
       <div class="spinner"></div> Caricamento in corso...
     </div>
+
     <div class="menu-preview-admin" id="menu-prev" style="display:none">
       <div class="mpa-header">
         <span>Menù attivo</span>
@@ -233,134 +246,152 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
       </div>
       <div class="mpa-img"><img id="menu-img-el" src="" alt="menù"/></div>
     </div>
+
     <div class="ordini-h">Ordini di oggi</div>
-    <div id="ordini-list"></div>
+    <div id="ordini-list"><div class="empty">Caricamento ordini...</div></div>
     <div class="exp-pre" id="exp-pre"></div>
   </div>
 
 </div>
 
-<script>
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, set, remove, onValue, get }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
 // ============================================================
-//  CONFIGURAZIONE — modifica prima di pubblicare
+// CONFIGURAZIONE FIREBASE
 // ============================================================
-const ADMIN_PASSWORD = 'pranzo2024';  // <-- cambia questa password!
+const firebaseConfig = {
+  apiKey: "AIzaSyBSNAaJk7zekk8Wd2aSGkSoU7bsJeTmo0g",
+  authDomain: "pranzo-app-6b5a1.firebaseapp.com",
+  projectId: "pranzo-app-6b5a1",
+  storageBucket: "pranzo-app-6b5a1.firebasestorage.app",
+  messagingSenderId: "748141742267",
+  appId: "1:748141742267:web:823e4578ac14bcd48d419e",
+  databaseURL: "https://pranzo-app-6b5a1-default-rtdb.europe-west1.firebasedatabase.app"
+};
 // ============================================================
+// PASSWORD ADMIN — cambia questo valore!
+const ADMIN_PASSWORD = 'pranzo2024';
+// ============================================================
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+const TODAY = new Date().toISOString().slice(0,10); // es. "2025-03-18"
+const ordiniRef = ref(db, `ordini/${TODAY}`);
+const menuRef   = ref(db, `menu/current`);
 
 let oraSelezionata = null;
 let adminUnlocked  = false;
-const TODAY   = new Date().toDateString();
-const LS_ORDINI = 'pranzo_ordini_' + TODAY;
-const LS_MENU   = 'pranzo_menu_img';
+let ordiniSnapshot = {};
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('datepill').textContent =
-    new Date().toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long'});
-  renderMenuDisplay();
+    new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+
+  // Ascolta menù in tempo reale
+  onValue(menuRef, snap => {
+    const m = snap.val();
+    renderMenuDisplay(m);
+    renderMenuPreviewAdmin(m);
+  });
+
+  // Ascolta ordini in tempo reale
+  onValue(ordiniRef, snap => {
+    ordiniSnapshot = snap.val() || {};
+    const lista = Object.values(ordiniSnapshot);
+    renderOrdini(lista);
+    updateStats(lista);
+  });
 });
 
-// ---- STORAGE ----
-function lsGet(key) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e){ return null; }
-}
-function lsSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
-}
-
 // ---- NAV ----
-function goTab(id, btn) {
-  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('sec-' + id).classList.add('on');
+window.goTab = function(id, btn) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
   btn.classList.add('on');
-  if (id === 'admin') { renderMenuPreviewAdmin(); renderOrdini(); updateStats(); }
-}
-function askAdmin(btn) {
+};
+window.askAdmin = function(btn) {
   if (adminUnlocked) { goTab('admin', btn); return; }
   window._adminBtn = btn;
   document.getElementById('modal-bg').classList.add('on');
-  document.getElementById('pwd-input').value = '';
-  document.getElementById('pwd-err').textContent = '';
-  setTimeout(() => document.getElementById('pwd-input').focus(), 100);
-}
-function checkPwd() {
+  document.getElementById('pwd-input').value='';
+  document.getElementById('pwd-err').textContent='';
+  setTimeout(()=>document.getElementById('pwd-input').focus(),100);
+};
+window.checkPwd = function() {
   if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
     document.getElementById('modal-bg').classList.remove('on');
     adminUnlocked = true;
     goTab('admin', window._adminBtn);
   } else {
-    document.getElementById('pwd-err').textContent = 'Password errata, riprova.';
-    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-err').textContent='Password errata, riprova.';
+    document.getElementById('pwd-input').value='';
     document.getElementById('pwd-input').focus();
+  }
+};
+
+// ---- MENU DISPLAY (colleghi) ----
+function renderMenuDisplay(m) {
+  const el = document.getElementById('menu-display');
+  const upd = document.getElementById('menu-updated');
+  if (m && m.dataUrl) {
+    el.innerHTML=`<div class="menu-img-wrap"><img src="${m.dataUrl}" alt="menù del giorno"/></div>`;
+    upd.textContent = m.ts ? 'Aggiornato: '+m.ts : '';
+  } else {
+    el.innerHTML=`<div class="menu-no-img"><strong>Menù non ancora disponibile</strong>
+      L'admin non ha ancora caricato il menù di oggi.<br>
+      Puoi comunque scrivere la tua scelta nei campi qui sotto.</div>`;
+    upd.textContent='';
   }
 }
 
-// ---- MENU DISPLAY ----
-function renderMenuDisplay() {
-  const m = lsGet(LS_MENU);
-  const el = document.getElementById('menu-display');
+// ---- MENU PREVIEW ADMIN ----
+function renderMenuPreviewAdmin(m) {
+  const prev = document.getElementById('menu-prev');
   if (m && m.dataUrl) {
-    el.innerHTML = `<div class="menu-img-wrap"><img src="${m.dataUrl}" alt="menù del giorno"/></div>`;
-    document.getElementById('menu-updated').textContent = m.ts ? 'Aggiornato: ' + m.ts : '';
+    document.getElementById('menu-img-el').src = m.dataUrl;
+    prev.style.display='block';
   } else {
-    el.innerHTML = `<div class="menu-no-img"><strong>Menù non ancora disponibile</strong>
-      L'admin non ha ancora caricato il menù di oggi.<br>
-      Puoi comunque scrivere la tua scelta nei campi qui sotto.</div>`;
-    document.getElementById('menu-updated').textContent = '';
+    prev.style.display='none';
   }
 }
 
 // ---- UPLOAD MENU ----
-function uploadMenu(input) {
+window.uploadMenu = function(input) {
   const file = input.files[0]; if (!file) return;
   if (!file.type.startsWith('image/')) {
-    alert('Formato non supportato. Carica un\'immagine JPG o PNG.\n\nSe hai solo il PDF, aprilo e fai uno screenshot oppure salvalo come immagine.');
-    input.value = '';
-    return;
+    alert('Carica un\'immagine JPG o PNG.\nSe hai il PDF, fai uno screenshot e carica quello.');
+    input.value=''; return;
   }
-  const aiRow = document.getElementById('ai-row');
-  aiRow.style.display = 'flex';
+  document.getElementById('ai-row').style.display='flex';
   const reader = new FileReader();
-  reader.onload = e => {
-    const ts = new Date().toLocaleString('it-IT', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
-    lsSet(LS_MENU, { dataUrl: e.target.result, ts });
-    aiRow.style.display = 'none';
-    renderMenuPreviewAdmin();
-    renderMenuDisplay();
-  };
-  reader.onerror = () => {
-    aiRow.style.display = 'none';
-    alert('Errore nel caricamento del file. Riprova.');
+  reader.onload = async e => {
+    const ts = new Date().toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    await set(menuRef, { dataUrl: e.target.result, ts });
+    document.getElementById('ai-row').style.display='none';
   };
   reader.readAsDataURL(file);
-  input.value = '';
-}
-function renderMenuPreviewAdmin() {
-  const m = lsGet(LS_MENU);
-  const prev = document.getElementById('menu-prev');
-  if (m && m.dataUrl) {
-    document.getElementById('menu-img-el').src = m.dataUrl;
-    prev.style.display = 'block';
-  } else {
-    prev.style.display = 'none';
-  }
-}
-function clearMenu() {
-  localStorage.removeItem(LS_MENU);
-  renderMenuPreviewAdmin();
-  renderMenuDisplay();
-}
+  input.value='';
+};
+window.clearMenu = async function() {
+  await remove(menuRef);
+};
 
 // ---- ORARIO ----
-function selOra(btn, val) {
-  document.querySelectorAll('.obtn').forEach(b => b.classList.remove('on'));
+window.selOra = function(btn, val) {
+  document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   oraSelezionata = val;
-}
+};
 
-// ---- SUBMIT ----
-function submitOrdine() {
+// ---- SUBMIT ORDINE ----
+window.submitOrdine = async function() {
   const nome     = document.getElementById('f-nome').value.trim();
   const primo    = document.getElementById('f-primo').value.trim();
   const secondo  = document.getElementById('f-secondo').value.trim();
@@ -370,91 +401,118 @@ function submitOrdine() {
   if (!primo)   { alert('Inserisci il primo piatto.'); return; }
   if (!secondo) { alert('Inserisci il secondo piatto.'); return; }
   if (!oraSelezionata) { alert("Seleziona l'orario di arrivo."); return; }
-  const ordini = lsGet(LS_ORDINI) || [];
-  ordini.push({ id:Date.now(), nome, primo, secondo, contorno, note, orario:oraSelezionata, data:TODAY,
-    ts: new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}) });
-  lsSet(LS_ORDINI, ordini);
-  document.getElementById('succ-txt').textContent =
-    `${nome} · ${primo} · ${secondo}${contorno?' + '+contorno:''} · ore ${oraSelezionata}`;
-  document.getElementById('succ').classList.add('on');
-  document.getElementById('the-form').style.display = 'none';
-}
-function resetForm() {
-  ['f-nome','f-primo','f-secondo','f-contorno','f-note'].forEach(id => document.getElementById(id).value='');
-  document.querySelectorAll('.obtn').forEach(b => b.classList.remove('on'));
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Invio in corso...';
+
+  try {
+    await push(ordiniRef, {
+      nome, primo, secondo, contorno, note,
+      orario: oraSelezionata,
+      ts: new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})
+    });
+    document.getElementById('succ-txt').textContent =
+      `${nome} · ${primo} · ${secondo}${contorno?' + '+contorno:''} · ore ${oraSelezionata}`;
+    document.getElementById('succ').classList.add('on');
+    document.getElementById('the-form').style.display='none';
+  } catch(e) {
+    alert('Errore nell\'invio. Controlla la connessione e riprova.');
+    btn.disabled = false;
+    btn.textContent = 'Invia il mio ordine';
+  }
+};
+
+window.resetForm = function() {
+  ['f-nome','f-primo','f-secondo','f-contorno','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('on'));
   oraSelezionata = null;
   document.getElementById('succ').classList.remove('on');
-  document.getElementById('the-form').style.display = 'block';
-}
+  document.getElementById('the-form').style.display='block';
+  const btn = document.getElementById('submit-btn');
+  btn.disabled=false; btn.textContent='Invia il mio ordine';
+};
 
-// ---- ORDINI ADMIN ----
-function renderOrdini() {
-  const ordini = lsGet(LS_ORDINI) || [];
+// ---- RENDER ORDINI ----
+function renderOrdini(lista) {
   const c = document.getElementById('ordini-list');
-  if (!ordini.length) { c.innerHTML = '<div class="empty">Nessun ordine ricevuto oggi.</div>'; return; }
-  c.innerHTML = [...ordini].sort((a,b)=>a.orario.localeCompare(b.orario)).map(o=>`
+  if (!lista || !lista.length) {
+    c.innerHTML='<div class="empty">Nessun ordine ricevuto oggi.</div>'; return;
+  }
+  const sorted = [...lista].sort((a,b)=>a.orario.localeCompare(b.orario));
+  c.innerHTML = sorted.map(o=>`
     <div class="ocard">
       <div class="oname">${esc(o.nome)}</div>
       <div class="opiate"><small>Primo</small>${esc(o.primo)}</div>
-      <div class="opiate"><small>Secondo</small>${esc(o.secondo)}
+      <div class="opiate">
+        <small>Secondo</small>${esc(o.secondo)}
         ${o.contorno?`<br/><small>Contorno</small>${esc(o.contorno)}`:''}
         ${o.note?`<span class="note-tag">📝 ${esc(o.note)}</span>`:''}
       </div>
       <div class="oorario">🕐 ${o.orario}</div>
-      <button class="btn-sm" onclick="delOrdine(${o.id})">✕</button>
+      <button class="btn-sm" onclick="delOrdine('${getKeyByOrdine(o)}')">✕</button>
     </div>`).join('');
-  updateStats(ordini);
 }
-function delOrdine(id) {
-  let ordini = lsGet(LS_ORDINI) || [];
-  lsSet(LS_ORDINI, ordini.filter(o=>o.id!==id));
-  renderOrdini();
+
+function getKeyByOrdine(o) {
+  return Object.entries(ordiniSnapshot).find(([k,v])=>
+    v.nome===o.nome && v.ts===o.ts
+  )?.[0] || '';
 }
-function updateStats(ordini) {
-  if (!ordini) ordini = lsGet(LS_ORDINI) || [];
-  document.getElementById('s-tot').textContent = ordini.length;
-  if (!ordini.length) { document.getElementById('s-pop').textContent='—'; document.getElementById('s-ora').textContent='—'; return; }
-  const pc={}, oc={};
-  ordini.forEach(o=>{ pc[o.primo]=(pc[o.primo]||0)+1; oc[o.orario]=(oc[o.orario]||0)+1; });
-  const top = Object.entries(pc).sort((a,b)=>b[1]-a[1])[0][0];
-  document.getElementById('s-pop').textContent = top.length>20?top.slice(0,20)+'…':top;
-  document.getElementById('s-ora').textContent = Object.entries(oc).sort((a,b)=>b[1]-a[1])[0][0];
+
+window.delOrdine = async function(key) {
+  if (!key) return;
+  await remove(ref(db, `ordini/${TODAY}/${key}`));
+};
+
+function updateStats(lista) {
+  document.getElementById('s-tot').textContent = lista.length;
+  if (!lista.length) {
+    document.getElementById('s-pop').textContent='—';
+    document.getElementById('s-ora').textContent='—'; return;
+  }
+  const pc={},oc={};
+  lista.forEach(o=>{pc[o.primo]=(pc[o.primo]||0)+1;oc[o.orario]=(oc[o.orario]||0)+1;});
+  const top=Object.entries(pc).sort((a,b)=>b[1]-a[1])[0][0];
+  document.getElementById('s-pop').textContent=top.length>20?top.slice(0,20)+'…':top;
+  document.getElementById('s-ora').textContent=Object.entries(oc).sort((a,b)=>b[1]-a[1])[0][0];
 }
 
 // ---- EXPORT ----
 function buildTesto() {
-  const ordini = lsGet(LS_ORDINI) || [];
-  const oggi = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  let t = `PRENOTAZIONI PRANZO — ${oggi.toUpperCase()}\n${'='.repeat(54)}\n\n`;
-  if (!ordini.length) { t += 'Nessun ordine ricevuto.\n'; return t; }
-  [...ordini].sort((a,b)=>a.orario.localeCompare(b.orario)).forEach((o,i) => {
-    t += `${i+1}. ${o.nome}\n   Primo:    ${o.primo}\n   Secondo:  ${o.secondo}\n`;
-    if (o.contorno) t += `   Contorno: ${o.contorno}\n`;
-    t += `   Arrivo:   ore ${o.orario}\n`;
-    if (o.note) t += `   Note:     ${o.note}\n`;
-    t += '\n';
+  const lista = Object.values(ordiniSnapshot);
+  const oggi=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  let t=`PRENOTAZIONI PRANZO — ${oggi.toUpperCase()}\n${'='.repeat(54)}\n\n`;
+  if (!lista.length){t+='Nessun ordine ricevuto.\n';return t;}
+  [...lista].sort((a,b)=>a.orario.localeCompare(b.orario)).forEach((o,i)=>{
+    t+=`${i+1}. ${o.nome}\n   Primo:    ${o.primo}\n   Secondo:  ${o.secondo}\n`;
+    if(o.contorno)t+=`   Contorno: ${o.contorno}\n`;
+    t+=`   Arrivo:   ore ${o.orario}\n`;
+    if(o.note)t+=`   Note:     ${o.note}\n`;
+    t+='\n';
   });
-  t += '='.repeat(54) + `\nTotale coperti: ${ordini.length}\n`;
+  t+='='.repeat(54)+`\nTotale coperti: ${lista.length}\n`;
   return t;
 }
-function copyRiepilogo() {
-  const t = buildTesto();
+
+window.copyRiepilogo = function() {
+  const t=buildTesto();
   navigator.clipboard.writeText(t)
     .then(()=>alert('✓ Riepilogo copiato negli appunti!'))
-    .catch(()=>{ document.getElementById('exp-pre').textContent=t; document.getElementById('exp-pre').classList.add('on'); });
-}
-function stampa() {
-  const t = buildTesto();
-  const w = window.open('','_blank');
+    .catch(()=>{document.getElementById('exp-pre').textContent=t;document.getElementById('exp-pre').classList.add('on');});
+};
+window.stampa = function() {
+  const t=buildTesto();
+  const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><title>Pranzo ${new Date().toLocaleDateString('it-IT')}</title>
   <style>body{font-family:Georgia,serif;padding:48px;font-size:13px;line-height:2;color:#111;max-width:700px;margin:0 auto}
-  h1{font-size:18px;margin-bottom:4px}pre{white-space:pre-wrap;font-family:'Courier New',monospace;font-size:13px}</style>
-  </head><body><h1>Il Buon Pasto — Prenotazioni Pranzo</h1>
-  <hr style="margin-bottom:20px;border:none;border-top:1px solid #ccc"/>
+  pre{white-space:pre-wrap;font-family:'Courier New',monospace}</style></head>
+  <body><h2>Il Buon Pasto — Prenotazioni Pranzo</h2><hr style="margin-bottom:20px"/>
   <pre>${t}</pre><script>window.print();setTimeout(()=>window.close(),1500);<\/script></body></html>`);
   w.document.close();
-}
-function esc(s){ if(!s)return''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+};
+
+function esc(s){if(!s)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
 </body>
 </html>
