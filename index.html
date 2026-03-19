@@ -160,7 +160,7 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
       <div class="rist-nome">La Rosa dei Venti</div>
       <div class="rist-contatti">
         📞 <a href="tel:0885656244">0885-656244</a><br>
-        ✉️ <a href="mailto:ristorante.albergo.larosadeiventi@hotmail.it">ristorante.albergo.larosadeiventi@hotmail.it</a>
+        ✉️ <a href="/cdn-cgi/l/email-protection#f1839882859e83909f8594df909d939483969edf9d90839e829095949887949f8598b1999e859c90989ddf9885"><span class="__cf_email__" data-cfemail="04766d77706b76656a70612a6568666176636b2a6865766b776560616d72616a706d446c6b7069656d682a6d70">[email&#160;protected]</span></a>
       </div>
     </div>
     <div class="tabs">
@@ -182,7 +182,7 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
       <p>L'orario limite per le ordinazioni online è le <strong>11:00</strong>.<br>
       Per ordinare contatta direttamente il ristorante:</p>
       <span class="tel">📞 0885-656244</span>
-      <span class="mail">✉️ ristorante.albergo.larosadeiventi@hotmail.it</span>
+      <span class="mail">✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f2809b81869d80939c8697dc939e909780959ddc9e93809d819396979b84979c869bb29a9d869f939b9edc9b86">[email&#160;protected]</a></span>
     </div>
 
     <div id="ordine-content">
@@ -304,7 +304,7 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 
 </div>
 
-<script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, set, remove, onValue }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -544,56 +544,94 @@ function updateStats(lista) {
 }
 
 // ---- RIEPILOGO ----
+function pad(str, len) {
+  const s = String(str||'');
+  return s.length >= len ? s.slice(0,len) : s + ' '.repeat(len - s.length);
+}
+
 function buildTesto() {
   const lista = Object.values(ordiniSnapshot);
   const oggi  = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const sep   = '─'.repeat(60);
-  let t = `CENTRALE EDISON CANDELA\n`;
-  t    += `Prenotazioni Pranzo — ${oggi}\n`;
-  t    += `Ristorante: La Rosa dei Venti — Tel. 0885-656244\n`;
-  t    += `${sep}\n\n`;
-  if (!lista.length) { t+='Nessun ordine ricevuto.\n'; return t; }
-  [...lista].sort((a,b)=>a.orario.localeCompare(b.orario)).forEach((o,i)=>{
-    let riga = `${i+1}. ${o.nome} – ${o.primo} – ${o.secondo}`;
-    if (o.contorno) riga += ` – ${o.contorno}`;
-    riga += ` – ore ${o.orario}`;
-    if (o.note)    riga += ` (${o.note})`;
-    t += riga + '\n';
+  const sep   = '─'.repeat(78);
+  let t  = `CENTRALE EDISON CANDELA\n`;
+  t     += `Prenotazioni Pranzo — ${oggi}\n`;
+  t     += `Ristorante: La Rosa dei Venti — Tel. 0885-656244\n`;
+  t     += `${sep}\n\n`;
+  if (!lista.length) { t += 'Nessun ordine ricevuto.\n'; return t; }
+  const sorted = [...lista].sort((a,b)=>a.orario.localeCompare(b.orario));
+  // Intestazioni colonne
+  t += pad('NOMINATIVO',22) + pad('PRIMO PIATTO',22) + pad('SECONDO PIATTO',20) + pad('CONTORNO',16) + pad('ORARIO',8) + '\n';
+  t += '─'.repeat(22) + '─'.repeat(22) + '─'.repeat(20) + '─'.repeat(16) + '─'.repeat(8) + '\n';
+  sorted.forEach(o => {
+    t += pad(o.nome,22) + pad(o.primo,22) + pad(o.secondo,20) + pad(o.contorno||'—',16) + pad(o.orario,8) + '\n';
+    if (o.note) t += `  Note: ${o.note}\n`;
   });
   t += `\n${sep}\n`;
   t += `Totale coperti: ${lista.length}\n`;
   return t;
 }
 
+function buildHtml() {
+  const lista  = Object.values(ordiniSnapshot);
+  const oggi   = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const data   = new Date().toLocaleDateString('it-IT');
+  const sorted = [...lista].sort((a,b)=>a.orario.localeCompare(b.orario));
+  const righe  = sorted.map((o,i) => `
+    <tr>
+      <td style="padding:9px 12px;border:1px solid #ccc;font-weight:700;color:#18180F;">${esc(o.nome)}</td>
+      <td style="padding:9px 12px;border:1px solid #ccc;">${esc(o.primo)}</td>
+      <td style="padding:9px 12px;border:1px solid #ccc;">${esc(o.secondo)}</td>
+      <td style="padding:9px 12px;border:1px solid #ccc;">${esc(o.contorno||'—')}</td>
+      <td style="padding:9px 12px;border:1px solid #ccc;text-align:center;font-weight:600;color:#5C6B4A;">${esc(o.orario)}</td>
+      ${o.note ? `<td style="padding:9px 12px;border:1px solid #ccc;font-size:11px;color:#888;">${esc(o.note)}</td>` : `<td style="padding:9px 12px;border:1px solid #ccc;color:#ccc;">—</td>`}
+    </tr>`).join('');
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Pranzo ${data}</title>
+  <style>
+    body{font-family:Georgia,serif;padding:40px;color:#111;max-width:860px;margin:0 auto;font-size:13px}
+    .header{border-bottom:3px solid #5C6B4A;padding-bottom:14px;margin-bottom:24px}
+    .header h1{font-size:22px;color:#18180F;margin-bottom:4px;letter-spacing:.02em}
+    .header h2{font-size:14px;font-weight:normal;color:#5C6B4A;margin-bottom:3px}
+    .header p{font-size:12px;color:#888}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    thead tr{background:#5C6B4A}
+    thead th{padding:10px 12px;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid #4A5A38;text-align:left}
+    tbody tr:nth-child(even){background:#F7F3EC}
+    tbody tr:hover{background:#EDF0E8}
+    .footer{margin-top:20px;font-size:12px;color:#666;border-top:1px solid #ddd;padding-top:12px}
+  </style></head>
+  <body>
+    <div class="header">
+      <h1>Centrale Edison Candela</h1>
+      <h2>Prenotazioni Pranzo — ${oggi}</h2>
+      <p>Ristorante: La Rosa dei Venti &nbsp;|&nbsp; Tel. 0885-656244</p>
+    </div>
+    ${lista.length === 0 ? '<p>Nessun ordine ricevuto.</p>' : `
+    <table>
+      <thead><tr>
+        <th>Nominativo</th>
+        <th>Primo piatto</th>
+        <th>Secondo piatto</th>
+        <th>Contorno</th>
+        <th>Orario</th>
+        <th>Note</th>
+      </tr></thead>
+      <tbody>${righe}</tbody>
+    </table>
+    <div class="footer">Totale coperti: <strong>${lista.length}</strong></div>`}
+    <script>window.print();setTimeout(()=>window.close(),1800);<\/script>
+  </body></html>`;
+}
+
 window.copyRiepilogo = function() {
-  const t=buildTesto();
+  const t = buildTesto();
   navigator.clipboard.writeText(t)
     .then(()=>alert('✓ Riepilogo copiato negli appunti!'))
     .catch(()=>{ document.getElementById('exp-pre').textContent=t; document.getElementById('exp-pre').classList.add('on'); });
 };
 
 window.stampa = function() {
-  const t=buildTesto();
-  const data=new Date().toLocaleDateString('it-IT');
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>Pranzo ${data}</title>
-  <style>
-    body{font-family:Georgia,serif;padding:48px;font-size:13px;line-height:1.9;color:#111;max-width:720px;margin:0 auto}
-    .intestazione{border-bottom:2px solid #5C6B4A;padding-bottom:14px;margin-bottom:20px}
-    .intestazione h1{font-size:20px;color:#18180F;margin-bottom:4px}
-    .intestazione h2{font-size:14px;font-weight:normal;color:#5C6B4A;margin-bottom:2px}
-    .intestazione p{font-size:12px;color:#888}
-    pre{white-space:pre-wrap;font-family:'Courier New',monospace;font-size:13px;line-height:1.9}
-  </style></head>
-  <body>
-    <div class="intestazione">
-      <h1>Centrale Edison Candela</h1>
-      <h2>Prenotazioni Pranzo — ${data}</h2>
-      <p>Ristorante: La Rosa dei Venti &nbsp;|&nbsp; Tel. 0885-656244</p>
-    </div>
-    <pre>${t.split('\n').slice(4).join('\n')}</pre>
-    <script>window.print();setTimeout(()=>window.close(),1500);<\/script>
-  </body></html>`);
+  const w = window.open('','_blank');
+  w.document.write(buildHtml());
   w.document.close();
 };
 
@@ -602,7 +640,7 @@ window.inviaEmail = function() {
   const oggi = new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
   const sogg = encodeURIComponent(`Prenotazioni Pranzo ${oggi} — Centrale Edison Candela`);
   const body = encodeURIComponent(t);
-  window.location.href = `mailto:${EMAIL_RISTORANTE}?subject=${sogg}&body=${body}`;
+  window.location.href = `mailto:ristorante.albergo.larosadeiventi@hotmail.it?subject=${sogg}&body=${body}`;
 };
 
 function esc(s){if(!s)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
