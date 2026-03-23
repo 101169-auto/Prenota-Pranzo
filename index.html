@@ -261,10 +261,15 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
       <div>
         <div class="admin-h">Pannello Admin <small>Gestione ordini e menù giornaliero</small></div>
       </div>
-      <div class="btns">
-        <button class="btn btn-o" onclick="copyRiepilogo()">📋 Copia</button>
-        <button class="btn btn-p" onclick="stampa()">🖨 Stampa</button>
-        <button class="btn btn-mail" onclick="inviaEmail()">✉️ Invia email</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <div class="btns">
+          <button class="btn btn-o" onclick="copyRiepilogo()">📋 Copia</button>
+          <button class="btn btn-p" onclick="stampa()">🖨 Stampa</button>
+          <button class="btn btn-mail" id="btn-email" onclick="inviaEmail()">✉️ Invia email</button>
+        </div>
+        <div id="mail-inviata" style="display:none;font-size:12px;font-weight:600;color:#5C6B4A;background:#EDF0E8;border:1px solid rgba(92,107,74,0.25);border-radius:20px;padding:4px 14px;">
+          ✅ Mail inviata alle <span id="mail-ora"></span>
+        </div>
       </div>
     </div>
 
@@ -392,6 +397,7 @@ window.goTab = function(id, btn) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('sec-'+id).classList.add('on');
   btn.classList.add('on');
+  if (id === 'admin') ripristinaStatoMail();
 };
 window.askAdmin = function(btn) {
   if (adminUnlocked) { goTab('admin', btn); return; }
@@ -679,7 +685,6 @@ window.inviaEmail = function() {
   corpo     += `Prenotazioni Pranzo — ${oggi}\n`;
   corpo     += `Ristorante: La Rosa dei Venti — Tel. 0885-656244\n`;
   corpo     += `${sep}\n\n`;
-
   lista.forEach((o, i) => {
     corpo += `${i+1}. ${(o.nome||'').toUpperCase()}\n`;
     corpo += `   Primo:    ${o.primo||'—'}\n`;
@@ -691,14 +696,36 @@ window.inviaEmail = function() {
       corpo += `   Note:     ${o.note}\n`;
     corpo += '\n';
   });
-
   corpo += `${sep}\n`;
   corpo += `Totale coperti: ${lista.length}\n`;
 
   const sogg = encodeURIComponent(`Prenotazioni Pranzo ${oggiB} — Centrale Edison Candela`);
   const body = encodeURIComponent(corpo);
   window.location.href = `mailto:ristorante.albergo.larosadeiventi@hotmail.it?subject=${sogg}&body=${body}`;
+
+  // Salva orario invio e aggiorna UI
+  const ora = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  localStorage.setItem('mailInviata_' + TODAY, ora);
+  setMailInviataUI(ora);
 };
+
+function setMailInviataUI(ora) {
+  const btn = document.getElementById('btn-email');
+  const badge = document.getElementById('mail-inviata');
+  if (!btn || !badge) return;
+  btn.disabled = true;
+  btn.style.background = '#B0B0A8';
+  btn.style.cursor = 'not-allowed';
+  btn.textContent = '✉️ Mail già inviata';
+  document.getElementById('mail-ora').textContent = ora;
+  badge.style.display = 'block';
+}
+
+// Ripristina stato all'apertura del pannello admin
+function ripristinaStatoMail() {
+  const ora = localStorage.getItem('mailInviata_' + TODAY);
+  if (ora) setMailInviataUI(ora);
+}
 
 function esc(s){if(!s)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
