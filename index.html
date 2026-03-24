@@ -119,6 +119,19 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--sage-light)}
 .sync-dot.live{background:#4CAF50;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* PRINT OVERLAY */
+.print-overlay{display:none;position:fixed;inset:0;background:#fff;z-index:200;overflow-y:auto;padding:28px 20px}
+.print-overlay.on{display:block}
+.print-overlay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #5C6B4A}
+.print-overlay-title{font-family:'Playfair Display',serif;font-size:18px;color:#18180F}
+.print-overlay-actions{display:flex;gap:8px}
+@media print{
+  .topbar,.wrap,.print-overlay-actions{display:none!important}
+  .print-overlay{display:block!important;position:static;padding:0}
+  .print-overlay-header{display:none!important}
+  .print-body{display:block!important}
+}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(24,24,15,.6);z-index:100;align-items:center;justify-content:center}
 .modal-bg.on{display:flex}
 .modal{background:var(--paper);border-radius:16px;padding:32px 28px;width:340px;max-width:90vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
@@ -309,7 +322,19 @@ body{background:var(--paper);font-family:'Outfit',sans-serif;color:var(--ink);mi
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><!-- PRINT OVERLAY (mobile-friendly) -->
+<div class="print-overlay" id="print-overlay">
+  <div class="print-overlay-header">
+    <div class="print-overlay-title">Riepilogo ordini</div>
+    <div class="print-overlay-actions">
+      <button class="btn btn-p" onclick="window.print()">🖨 Stampa / Salva PDF</button>
+      <button class="btn btn-o" onclick="document.getElementById('print-overlay').classList.remove('on')">✕ Chiudi</button>
+    </div>
+  </div>
+  <div id="print-body"></div>
+</div>
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, push, set, remove, onValue }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -336,6 +361,7 @@ const db  = getDatabase(app);
 const TODAY = new Date().toISOString().slice(0,10);
 const ordiniRef = ref(db, `ordini/${TODAY}`);
 const menuRef   = ref(db, `menu/current`);
+const mailRef   = ref(db, `mail/${TODAY}`);
 
 let oraSelezionata = null;
 let adminUnlocked  = false;
@@ -367,6 +393,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const lista = Object.values(ordiniSnapshot);
     renderOrdini(lista);
     updateStats(lista);
+  });
+
+  // Ascolta stato mail in tempo reale (condiviso tra tutti i dispositivi)
+  onValue(mailRef, snap => {
+    const m = snap.val();
+    if (m && m.ora) setMailInviataUI(m.ora);
   });
 
   // Pulizia automatica: rimuove ordini di ieri e precedenti
@@ -668,9 +700,17 @@ window.copyRiepilogo = function() {
 };
 
 window.stampa = function() {
-  const w = window.open('','_blank');
-  w.document.write(buildHtmlPdf());
-  w.document.close();
+  const lista  = getListaSorted();
+  const oggi   = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const data   = new Date().toLocaleDateString('it-IT');
+  const contenuto = `
+    <div style="font-family:Georgia,serif;color:#111;font-size:13px;max-width:860px;margin:0 auto">
+      ${buildIntestazioneHtml(oggi, data, false)}
+      ${lista.length === 0 ? '<p style="color:#888">Nessun ordine ricevuto.</p>' : buildTabellaHtml(lista, oggi, data, false)}
+    </div>`;
+  document.getElementById('print-body').innerHTML = contenuto;
+  document.getElementById('print-overlay').classList.add('on');
+  window.scrollTo(0,0);
 };
 
 window.inviaEmail = function() {
@@ -703,14 +743,13 @@ window.inviaEmail = function() {
   const body = encodeURIComponent(corpo);
   window.location.href = `mailto:ristorante.albergo.larosadeiventi@hotmail.it?subject=${sogg}&body=${body}`;
 
-  // Salva orario invio e aggiorna UI
+  // Salva orario invio su Firebase (visibile su tutti i dispositivi)
   const ora = new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-  localStorage.setItem('mailInviata_' + TODAY, ora);
-  setMailInviataUI(ora);
+  set(mailRef, { ora });
 };
 
 function setMailInviataUI(ora) {
-  const btn = document.getElementById('btn-email');
+  const btn   = document.getElementById('btn-email');
   const badge = document.getElementById('mail-inviata');
   if (!btn || !badge) return;
   btn.disabled = true;
@@ -721,11 +760,8 @@ function setMailInviataUI(ora) {
   badge.style.display = 'block';
 }
 
-// Ripristina stato all'apertura del pannello admin
-function ripristinaStatoMail() {
-  const ora = localStorage.getItem('mailInviata_' + TODAY);
-  if (ora) setMailInviataUI(ora);
-}
+// ripristinaStatoMail non serve più — Firebase aggiorna in tempo reale tramite onValue
+function ripristinaStatoMail() {}
 
 function esc(s){if(!s)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
