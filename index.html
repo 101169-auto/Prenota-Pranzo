@@ -754,10 +754,12 @@ function setMailInviataUI(ora) {
   const btn   = document.getElementById('btn-email');
   const badge = document.getElementById('mail-inviata');
   if (!btn || !badge) return;
-  btn.disabled = true;
-  btn.style.background = '#B0B0A8';
-  btn.style.cursor = 'not-allowed';
-  btn.textContent = '✉️ Mail già inviata';
+  // Il pulsante resta sempre attivo
+  btn.disabled = false;
+  btn.style.background = '';
+  btn.style.cursor = '';
+  btn.textContent = '✉️ Invia email';
+  // Aggiorna/mostra l'orario dell'ultimo invio
   document.getElementById('mail-ora').textContent = ora;
   badge.style.display = 'block';
 }
